@@ -51,7 +51,8 @@ export default async (req: Request, _context: Context) => {
     const orders = await db.sql`
       SELECT o.id, o.code, o.person, o.note, o.total, o.status, o.created_at,
              o.accepted_at, o.done_at, o.fulfilment, o.address, o.contact_phone,
-             l.name AS location, o.location_slug AS slug
+             l.name AS location, l.street AS loc_street, l.phone AS loc_phone,
+             o.location_slug AS slug
       FROM orders o
       LEFT JOIN locations l ON l.slug = o.location_slug
       WHERE o.created_at >= date_trunc('day', NOW() AT TIME ZONE 'Europe/Skopje')

@@ -69,7 +69,12 @@ border-left:7px solid var(--line);padding:18px 20px 16px}
 .card.new{border-left-color:var(--red)}
 .card.prep{border-left-color:var(--gold)}
 .card.done{border-left-color:var(--olive);opacity:.62}
-.ch{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.ch{display:flex;align-items:flex-start;gap:18px;margin-bottom:11px}
+.lbl{display:block;font-style:normal;font-size:.68rem;font-weight:500;color:var(--mute);
+letter-spacing:.01em;margin-bottom:2px;font-family:Rubik,sans-serif}
+.who{font-size:1.06rem;font-weight:500}
+.firm{font-family:Bitter,serif;font-size:1.12rem;font-weight:700;color:var(--ink)}
+.fstreet{color:var(--mute);font-weight:400}
 .ono{font-family:Bitter,serif;font-weight:700;font-size:1.22rem;font-variant-numeric:tabular-nums}
 .cage{margin-left:auto;font-size:.76rem;color:var(--mute);font-variant-numeric:tabular-nums}
 .cplace{font-size:1.02rem;color:var(--blue);font-weight:500;margin-bottom:12px;line-height:1.5}
@@ -207,8 +212,12 @@ font-size:.77rem;color:var(--mute);text-decoration:none;background:#fff;display:
   .card{border-radius:14px;border-left-width:10px;padding:22px 26px 20px}
   .card.done{opacity:.82}            /* .62 disappears under kitchen glare */
   .ch{gap:14px;margin-bottom:14px}
-  .ono{font-size:1.5rem}
+  .ono{font-size:1.9rem}
+  .who{font-size:1.5rem}
+  .firm{font-size:1.6rem}
+  .lbl{font-size:.92rem;margin-bottom:4px}
   .cage{font-size:1.02rem}
+  .ch{gap:28px}
 
   /* Who ordered and where it goes: the two things he needs at a glance. */
   .cplace{font-size:1.3rem;line-height:1.45;margin-bottom:14px}
@@ -295,7 +304,7 @@ const T = {
   sq:{gate:"Kuzhina",gateSub:"Fjalëkalimi i kuzhinës",enter:"Hyr",wrong:"Fjalëkalim i gabuar.",
     tabs:{flow:"Porositë",kitchen:"Kuzhina",runs:"Dërgesat",menu:"Menyja",hours:"Orari",codes:"Kodet QR",month:"Muaji"},
     today:"Sot",orders:"porosi",revenue:"Qarkullimi",all:"Të gjitha",new:"Të reja",
-    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",
+    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",ordNo:"Porosia nr.",orderer:"Porositësi",firm:"Firma",
     noOrders:"Ende asnjë porosi sot.",noneHere:"Asgjë këtu për momentin.",
     cook:"Për t'u gatuar",cookNote:"Numërimi i artikujve që nuk janë dërguar ende.",
     allCooked:"S'ka gjë në pritje.",sendAll:"Të gjitha u dërguan",people:"persona",
@@ -329,7 +338,7 @@ const T = {
   mk:{gate:"Кујна",gateSub:"Лозинка за кујната",enter:"Влези",wrong:"Погрешна лозинка.",
     tabs:{flow:"Порачки",kitchen:"Кујна",runs:"Достави",menu:"Мени",hours:"Работно време",codes:"QR кодови",month:"Месец"},
     today:"Денес",orders:"порачки",revenue:"Промет",all:"Сите",new:"Нови",
-    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",
+    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",ordNo:"Порачка бр.",orderer:"Нарачува",firm:"Фирма",
     noOrders:"Сè уште нема порачки денес.",noneHere:"Тука нема ништо во моментов.",
     cook:"За готвење",cookNote:"Збир на артикли што сè уште не се испратени.",
     allCooked:"Нема ништо во ред.",sendAll:"Сите се испратени",people:"лица",
@@ -383,7 +392,15 @@ const orderUrl = slug => `${location.origin}/?k=${slug}`;
    ring on the way. */
 function destLine(o) {
   const L = t();
-  if (o.location) return `<div class="cplace">${esc(o.location)}</div>`;
+  if (o.location) {
+    /* A company order already knows who and where. The phone matters most:
+       when an order is odd or large, he rings them rather than guessing. */
+    const ltel = o.loc_phone
+      ? `<a class="ctel" href="tel:${esc(String(o.loc_phone).replace(/[^\d+]/g, ""))}">${esc(o.loc_phone)}</a>`
+      : "";
+    return `<div class="cplace"><i class="lbl">${L.firm}</i><b class="firm">${esc(o.location)}</b>
+      ${o.loc_street ? `<span class="fstreet">${esc(o.loc_street)}</span>` : ""}${ltel ? " · " + ltel : ""}</div>`;
+  }
   const pick = o.fulfilment === "pickup";
   const tel = o.contact_phone
     ? `<a class="ctel" href="tel:${esc(o.contact_phone.replace(/[^\d+]/g, ""))}">${esc(o.contact_phone)}</a>`
@@ -612,7 +629,9 @@ function render() {
     const shown = filter === "all" ? d.orders : d.orders.filter(o => o.status === filter);
     if (!shown.length) h += `<p class="none">${c.all ? L.noneHere : L.noOrders}</p>`;
     h += `<div class="grid">` + shown.map(o => `<div class="card ${o.status}">
-      <div class="ch"><span class="ono">${esc(o.code)}</span><span>${esc(o.person)}</span>
+      <div class="ch">
+        <span class="ono"><i class="lbl">${L.ordNo}</i>${esc(o.code)}</span>
+        <span class="who"><i class="lbl">${L.orderer}</i>${esc(o.person)}</span>
         <span class="cage">${ago(o.created_at)}</span></div>
       ${destLine(o)}
       ${o.eta && o.status !== "done" ? `<div class="ceta">${L.eta} ${esc(o.eta)}</div>` : ""}
