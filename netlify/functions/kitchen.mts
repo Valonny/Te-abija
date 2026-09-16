@@ -129,6 +129,17 @@ export default async (req: Request, _context: Context) => {
     return Response.json({ ok: true });
   }
 
+  /* --- someone rang up and cancelled --- */
+  if (action === "delete") {
+    const id = Number(body.id);
+    if (!Number.isInteger(id)) return Response.json({ error: "bad_id" }, { status: 400 });
+    /* order_items is ON DELETE CASCADE, so the lines go with the order and
+       nothing is orphaned. Month totals only count status='done', so a
+       cancelled order was never in the takings to begin with. */
+    await db.sql`DELETE FROM orders WHERE id = ${id}`;
+    return Response.json({ ok: true });
+  }
+
   /* --- close out a whole company in one click --- */
   if (action === "deliver-location") {
     const slug = String(body.slug || "");

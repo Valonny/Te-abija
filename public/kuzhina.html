@@ -63,31 +63,34 @@ font-weight:600;padding:1px 7px;border-radius:999px;font-variant-numeric:tabular
 padding:7px 14px;font-size:.84rem;color:var(--mute)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:500}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(304px,1fr));gap:13px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:9px;
-border-left:4px solid var(--line);padding:14px 16px 13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:11px;
+border-left:7px solid var(--line);padding:18px 20px 16px}
 .card.new{border-left-color:var(--red)}
 .card.prep{border-left-color:var(--gold)}
 .card.done{border-left-color:var(--olive);opacity:.62}
 .ch{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
-.ono{font-family:Bitter,serif;font-weight:700;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.ono{font-family:Bitter,serif;font-weight:700;font-size:1.22rem;font-variant-numeric:tabular-nums}
 .cage{margin-left:auto;font-size:.76rem;color:var(--mute);font-variant-numeric:tabular-nums}
-.cplace{font-size:.79rem;color:var(--blue);font-weight:500;margin-bottom:9px;line-height:1.5}
+.cplace{font-size:1.02rem;color:var(--blue);font-weight:500;margin-bottom:12px;line-height:1.5}
 .tag{display:inline-block;background:var(--gold);color:#2B1A06;font-size:.66rem;font-weight:700;
 letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-right:6px}
 .tag.pick{background:var(--blue);color:#fff}
-.ctel{color:var(--red);font-weight:600;text-decoration:none;white-space:nowrap}
+.ctel{color:var(--red);font-weight:600;text-decoration:none;white-space:nowrap;font-size:1.06rem}
 .dst{font-style:normal;color:var(--red);font-weight:500}
 .ceta{font-size:.76rem;color:var(--mute);margin-bottom:9px;font-variant-numeric:tabular-nums}
-.it{display:flex;font-size:.9rem;padding:3px 0}
+.it{display:flex;font-size:1.06rem;padding:6px 0}
 .it span{flex:1}
 .it b{font-weight:600;margin-right:9px;min-width:22px;font-variant-numeric:tabular-nums}
-.cnote{font-size:.82rem;color:var(--mute);background:var(--paper);border-radius:5px;padding:7px 9px;margin-top:9px}
+.cnote{font-size:.97rem;color:var(--mute);background:var(--paper);border-radius:6px;padding:10px 12px;margin-top:12px}
 .cf{display:flex;align-items:center;gap:9px;margin-top:12px;border-top:1px solid var(--line);padding-top:11px}
-.ctot{font-family:Bitter,serif;font-size:1.06rem;flex:1;font-variant-numeric:tabular-nums}
-.act{padding:8px 15px;border-radius:6px;font-size:.86rem;font-weight:600}
+.ctot{font-family:Bitter,serif;font-size:1.28rem;flex:1;font-variant-numeric:tabular-nums}
+.act{padding:11px 19px;border-radius:7px;font-size:.98rem;font-weight:600}
 .act.p{background:var(--gold);color:#2B1A06}
 .act.g{background:var(--olive);color:#fff}
+.act.del{color:var(--mute);font-weight:400;font-size:.8rem;padding:8px 12px;
+border:1px solid var(--line);border-radius:6px;background:#fff}
+.act.del.armed{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
 .act.q{color:var(--mute);font-weight:400;font-size:.8rem;padding:8px 4px;
 text-decoration:underline;text-underline-offset:3px}
 
@@ -292,7 +295,7 @@ const T = {
   sq:{gate:"Kuzhina",gateSub:"Fjalëkalimi i kuzhinës",enter:"Hyr",wrong:"Fjalëkalim i gabuar.",
     tabs:{flow:"Porositë",kitchen:"Kuzhina",runs:"Dërgesat",menu:"Menyja",hours:"Orari",codes:"Kodet QR",month:"Muaji"},
     today:"Sot",orders:"porosi",revenue:"Qarkullimi",all:"Të gjitha",new:"Të reja",
-    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",
+    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",
     noOrders:"Ende asnjë porosi sot.",noneHere:"Asgjë këtu për momentin.",
     cook:"Për t'u gatuar",cookNote:"Numërimi i artikujve që nuk janë dërguar ende.",
     allCooked:"S'ka gjë në pritje.",sendAll:"Të gjitha u dërguan",people:"persona",
@@ -326,7 +329,7 @@ const T = {
   mk:{gate:"Кујна",gateSub:"Лозинка за кујната",enter:"Влези",wrong:"Погрешна лозинка.",
     tabs:{flow:"Порачки",kitchen:"Кујна",runs:"Достави",menu:"Мени",hours:"Работно време",codes:"QR кодови",month:"Месец"},
     today:"Денес",orders:"порачки",revenue:"Промет",all:"Сите",new:"Нови",
-    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",
+    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",
     noOrders:"Сè уште нема порачки денес.",noneHere:"Тука нема ништо во моментов.",
     cook:"За готвење",cookNote:"Збир на артикли што сè уште не се испратени.",
     allCooked:"Нема ништо во ред.",sendAll:"Сите се испратени",people:"лица",
@@ -365,6 +368,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 let lang = localStorage.getItem("abija-lang") || "sq";
 let key = sessionStorage.getItem("abija-key") || "";
 let tab = "flow", filter = "all", bell = true;
+let killing = null, killTimer = null;
 let d = null, month = null, gateErr = false, seen = new Set(), first = true;
 /* Forms are held here, not read off the DOM, so the 12-second poll can never
    overwrite something the cook is halfway through typing. */
@@ -620,6 +624,8 @@ function render() {
         ${o.status === "prep" ? `<button class="act q" data-status="new" data-id="${o.id}">${L.undo}</button>
           <button class="act g" data-status="done" data-id="${o.id}">${L.deliver}</button>` : ""}
         ${o.status === "done" ? `<button class="act q" data-status="prep" data-id="${o.id}">${L.undo}</button>` : ""}
+        <button class="act del${killing === o.id ? " armed" : ""}" data-del="${o.id}"
+          >${killing === o.id ? L.delSure : L.del}</button>
       </div></div>`).join("") + `</div>`;
   }
 
@@ -705,6 +711,20 @@ $.addEventListener("click", async e => {
     return poll();
   }
   if (b.dataset.lang) { lang = b.dataset.lang; localStorage.setItem("abija-lang", lang); return render(); }
+  if (b.dataset.del) {
+    const id = Number(b.dataset.del);
+    if (killing !== id) {                       /* first tap: arm it */
+      killing = id;
+      clearTimeout(killTimer);
+      killTimer = setTimeout(() => { killing = null; render(); }, 4000);
+      return render();
+    }
+    clearTimeout(killTimer);                    /* second tap: do it */
+    killing = null;
+    await api("?action=delete", { method: "POST", body: JSON.stringify({ id }) });
+    seen.delete(id);
+    return poll();
+  }
   if (b.hasAttribute("data-bell")) { bell = !bell; if (bell) ping(true); return render(); }
   if (b.dataset.tab) {
     tab = b.dataset.tab; flash = ""; flashBad = ""; render();
