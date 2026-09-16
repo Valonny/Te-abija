@@ -1,4 +1,4 @@
-/* Të Abija — the ordering screen. Two ways in, and they are not the same:
+/* Te Abija — the ordering screen. Two ways in, and they are not the same:
 
    ?k=<slug>  a company's QR code on the wall. The slug names the company, the
               food goes to that company's kitchen, and the page greets it.
@@ -371,7 +371,7 @@ function bump(id, by) {
 function header() {
   return `<header class="hdr">
     <div class="hrow">${ICON.pot}
-      <div class="brand">Të Abija<em>${L().sub}</em></div>
+      <div class="brand">Te Abija<em>${L().sub}</em></div>
       <a class="tel" href="tel:${TEL.dial}" aria-label="${L().callUs} ${TEL.show}">
         ${ICON.phone}<span class="num">${TEL.show}</span></a>
     </div>

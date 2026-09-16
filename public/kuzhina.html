@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#A80F16">
-<title>Të Abija — Kuzhina</title>
+<title>Te Abija — Kuzhina</title>
 <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
@@ -529,7 +529,7 @@ function codesTab() {
     <img src="/api/qr?k=${encodeURIComponent(l.slug)}&prod=1" alt="QR ${esc(l.name)}" loading="lazy">
     <h4>${esc(l.name)}</h4>
     <div class="slug">/?k=${esc(l.slug)}</div>
-    <div class="qnote">${L.scanMe}<br><b>Të Abija</b></div>
+    <div class="qnote">${L.scanMe}<br><b>Te Abija</b></div>
     ${l.active ? `<div class="tally">${l.orders_today} ${L.orders} · ${L.today}</div>`
                : `<div class="tally" style="color:var(--red)">${L.offNow}</div>`}
     <div class="qa">
@@ -587,7 +587,7 @@ function render() {
   const cookTotal = live.reduce((a, o) => a + o.items.reduce((b, i) => b + i.qty, 0), 0);
 
   let h = `<header class="top">
-    <div class="logo">Të Abija<span>Kuzhina Popullore · Народна Кујна</span></div>
+    <div class="logo">Te Abija<span>Kuzhina Popullore · Народна Кујна</span></div>
     <div class="stat"><b class="num">${c.all}</b><span>${L.today} · ${L.orders}</span></div>
     <div class="stat"><b class="num">${revenue.toLocaleString()}</b><span>${L.revenue} · ${L.den}</span></div>
     ${svcChip()}
