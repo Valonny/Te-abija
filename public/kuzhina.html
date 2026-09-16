@@ -168,6 +168,94 @@ display:flex;flex-direction:column;align-items:center;text-align:center}
 .qc .qa button,.qc .qa a{border:1px solid var(--line);border-radius:6px;padding:6px 10px;
 font-size:.77rem;color:var(--mute);text-decoration:none;background:#fff;display:inline-block}
 .qnote{display:none}
+/* ============================================================== TOUCH SCREENS
+   The board runs all day on a tablet propped by the pass. It is read from a
+   step or two away, and tapped by someone holding a pan. So: type goes up,
+   nothing to hit is under 60px, the status stripe widens enough to read the
+   state of an order without reading a word of it, and Accept becomes the
+   full width of the card because it is the only thing he taps in a rush.
+   Scoped to coarse pointers, so the phone and the laptop are untouched. */
+@media (pointer:coarse) and (min-width:820px){
+  body{padding-bottom:64px}
+
+  .top{padding:20px 30px;gap:30px}
+  .logo{font-size:1.65rem}
+  .logo span{font-size:.9rem;margin-top:4px}
+  .stat b{font-size:2.1rem}
+  .stat span{font-size:.92rem}
+  .svc{font-size:1.02rem;padding:11px 20px;gap:10px}
+  .svc .dot{width:11px;height:11px}
+  .tgl{font-size:1.02rem;gap:12px;min-height:60px}
+  .sw{width:58px;height:32px}
+  .sw i{width:24px;height:24px;top:4px;left:4px}
+  .sw.on i{left:30px}
+  .lang button{padding:11px 20px;font-size:1rem}
+
+  .nav{padding:0 30px;gap:6px}
+  .nav button{padding:20px 24px 17px;font-size:1.18rem}
+  .pill{font-size:.92rem;padding:3px 11px;margin-left:10px}
+
+  .wrap{padding:28px 30px;max-width:none}
+  .chips{gap:12px;margin-bottom:24px}
+  .chip{padding:14px 26px;font-size:1.06rem;min-height:60px;display:flex;align-items:center}
+
+  /* Two columns, not four. A card you can read beats a card you can fit. */
+  .grid{grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:20px}
+  .card{border-radius:14px;border-left-width:10px;padding:22px 26px 20px}
+  .card.done{opacity:.82}            /* .62 disappears under kitchen glare */
+  .ch{gap:14px;margin-bottom:14px}
+  .ono{font-size:1.5rem}
+  .cage{font-size:1.02rem}
+
+  /* Who ordered and where it goes: the two things he needs at a glance. */
+  .cplace{font-size:1.3rem;line-height:1.45;margin-bottom:14px}
+  .ctel{font-size:1.35rem;padding:4px 0;display:inline-block}
+  .tag{font-size:.86rem;padding:4px 11px;border-radius:6px;margin-right:9px}
+  .ceta{font-size:1.02rem;margin-bottom:14px}
+
+  .it{font-size:1.24rem;padding:8px 0;line-height:1.35}
+  .it b{min-width:38px;margin-right:14px}
+  .cnote{font-size:1.1rem;padding:14px 16px;margin-top:14px;border-radius:8px;line-height:1.45}
+
+  .cf{gap:14px;margin-top:20px;padding-top:18px;flex-wrap:wrap}
+  .ctot{font-size:1.5rem;flex-basis:100%}
+  .act{flex:1;min-height:66px;font-size:1.18rem;border-radius:10px;padding:0 24px}
+  .act.q{flex:0 0 auto;font-size:1.02rem;min-height:66px;padding:0 18px}
+
+  .cook{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+  .ck{padding:24px 26px;gap:20px;border-radius:14px}
+  .ckq{font-size:3rem;min-width:70px}
+  .ckn{font-size:1.28rem}
+
+  h2.sect{font-size:1.8rem}
+  .lead{font-size:1.1rem;margin-bottom:24px}
+  .none{font-size:1.15rem;padding:52px 0}
+
+  .run{border-radius:14px;margin-bottom:20px}
+  .rh{padding:18px 26px;gap:16px}
+  .rh h3{font-size:1.35rem}
+  .rh em{font-size:1rem}
+  .rb{padding:8px 26px 20px}
+  .rl{font-size:1.14rem;padding:14px 0;gap:16px}
+  .rl b{min-width:72px}
+  .rl .w{min-width:118px}
+
+  .mrow{padding:18px 24px;gap:16px;margin-bottom:12px;border-radius:12px}
+  .mrow .mn{font-size:1.2rem;min-width:220px}
+  .mrow .mn i{font-size:.98rem;margin-top:4px}
+  .mrow input{width:110px;padding:14px 16px;font-size:1.1rem;min-height:60px}
+  .mrow input.slug{width:180px}
+  .mact{padding:0 22px;min-height:60px;font-size:1.02rem;border-radius:9px}
+  .mh{font-size:1.25rem;margin:32px 0 14px}
+  .thumb{width:64px;height:64px;border-radius:9px}
+}
+
+/* Any touch device, phone included: nothing tappable below the thumb minimum. */
+@media (pointer:coarse){
+  .nav button,.chip,.act,.mact,.lang button{min-height:52px}
+  .ctel{padding:6px 0;display:inline-block}
+}
+
 /* --- the board follows whatever screen it lands on --- */
 @media (max-width:560px){
   .top{padding:11px 14px;gap:13px}
