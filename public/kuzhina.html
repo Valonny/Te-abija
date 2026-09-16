@@ -304,36 +304,40 @@ const destText = o => o.fulfilment === "pickup"
   ? t().pickup
   : [o.address, o.contact_phone].filter(Boolean).join(" · ");
 
-/* A real bell, not a polite beep. Bells are inharmonic: a strike tone plus
-   partials at non-integer ratios, the high ones dying first. Three strikes,
-   loud enough to carry over a kitchen, through a compressor so the stacked
-   partials get loud without clipping. */
+/* A real bell, and a loud one. Bells are inharmonic: a strike tone plus
+   partials at non-integer ratios, the high ones dying first. Pitched high
+   where the ear is most sensitive, squeezed hard by a compressor and then
+   made up well past unity, so it carries over an extraction fan. Four
+   strikes, because three was not annoying enough. */
 let actx = null;
-function ping() {
-  if (!bell) return;
+async function ping(force) {
+  if (!bell && !force) return;
   try {
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-    if (actx.state === "suspended") actx.resume();
-    const t0 = actx.currentTime;
+    /* Browsers hand back a suspended context until a click. Waiting matters:
+       anything scheduled while it is still suspended is simply never heard. */
+    if (actx.state === "suspended") await actx.resume();
+    const t0 = actx.currentTime + .05;
 
     const comp = actx.createDynamicsCompressor();
-    comp.threshold.value = -18; comp.ratio.value = 12; comp.attack.value = .002;
+    comp.threshold.value = -32; comp.ratio.value = 18;
+    comp.knee.value = 6; comp.attack.value = .001; comp.release.value = .12;
     const out = actx.createGain();
-    out.gain.value = .95;
+    out.gain.value = 3.2;              // makeup: the compressor has none
     comp.connect(out).connect(actx.destination);
 
     const RATIOS = [1, 2.0, 2.76, 5.4, 8.1];
-    const DECAY  = [1.5, 1.1, .8, .45, .3];
+    const DECAY  = [1.6, 1.2, .9, .5, .35];
 
-    for (let s = 0; s < 3; s++) {
-      const at = t0 + s * .55;
+    for (let s = 0; s < 4; s++) {
+      const at = t0 + s * .5;
       RATIOS.forEach((r, i) => {
         const o = actx.createOscillator(), g = actx.createGain();
-        o.type = "sine";
-        o.frequency.value = 1000 * r;
-        const peak = .5 / (i + 1.4);
+        o.type = i ? "sine" : "triangle";   // a little edge on the fundamental
+        o.frequency.value = 1200 * r;
+        const peak = 1.1 / (i + 1.2);
         g.gain.setValueAtTime(.0001, at);
-        g.gain.exponentialRampToValueAtTime(peak, at + .004);
+        g.gain.exponentialRampToValueAtTime(peak, at + .003);
         g.gain.exponentialRampToValueAtTime(.0001, at + DECAY[i]);
         o.connect(g).connect(comp);
         o.start(at); o.stop(at + DECAY[i] + .05);
@@ -613,7 +617,7 @@ $.addEventListener("click", async e => {
     return poll();
   }
   if (b.dataset.lang) { lang = b.dataset.lang; localStorage.setItem("abija-lang", lang); return render(); }
-  if (b.hasAttribute("data-bell")) { bell = !bell; return render(); }
+  if (b.hasAttribute("data-bell")) { bell = !bell; if (bell) ping(true); return render(); }
   if (b.dataset.tab) {
     tab = b.dataset.tab; flash = ""; flashBad = ""; render();
     if (tab === "month") { month = await api("?action=month", { method: "POST", body: "{}" }); render(); }
