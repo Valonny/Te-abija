@@ -17,7 +17,7 @@ export default async (req: Request, _context: Context) => {
     db.sql`
       SELECT id, name_sq, name_mk, desc_sq, desc_mk, category, price, photo,
              is_special, is_veg, available
-      FROM menu_items ORDER BY sort_order, id`,
+      FROM menu_items WHERE listed = TRUE ORDER BY sort_order, id`,
   ]);
 
   const service = serviceState(settings);
