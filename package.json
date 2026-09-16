@@ -1,0 +1,10 @@
+{
+  "name": "te-abija",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/database": "*",
+    "@netlify/functions": "*",
+    "qrcode": "^1.5.4"
+  }
+}

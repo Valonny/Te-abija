@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#A80F16">
+<title>Të Abija — Kuzhina</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+:root{--red:#A80F16;--paper:#FBF6F1;--card:#fff;--ink:#241413;--mute:#7A6763;
+--line:#E7DCD3;--gold:#D8A44A;--olive:#4C6B3C;--blue:#3A5A78}
+html,body{margin:0}
+body{font-family:Rubik,system-ui,sans-serif;color:var(--ink);background:var(--paper);
+min-height:100vh;padding-bottom:40px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Bitter,Georgia,serif;margin:0}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.gate{max-width:340px;margin:16vh auto;padding:0 22px;text-align:center}
+.gate h1{font-size:1.5rem;margin-bottom:6px}
+.gate p{color:var(--mute);font-size:.9rem;margin:0 0 20px}
+.gate input{width:100%;padding:13px;border:1px solid var(--line);border-radius:7px;
+font-size:1rem;font-family:inherit;background:#fff;text-align:center}
+.gate button{width:100%;margin-top:12px;background:var(--red);color:var(--paper);
+padding:14px;border-radius:7px;font-weight:600;font-size:1rem}
+.gate .warn{color:var(--red);font-size:.83rem;margin-top:10px}
+
+.top{background:var(--red);color:var(--paper);padding:15px 22px;display:flex;
+align-items:center;gap:22px;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.logo{font-family:Bitter,serif;font-weight:700;font-size:1.2rem;line-height:1.1}
+.logo span{display:block;font-size:.68rem;font-weight:500;opacity:.75;margin-top:2px}
+.stat b{font-family:Bitter,serif;font-size:1.45rem;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:.7rem;opacity:.72}
+.spacer{margin-left:auto}
+.tgl{display:flex;align-items:center;gap:8px;font-size:.8rem}
+.sw{width:38px;height:21px;border-radius:999px;background:rgba(251,246,241,.28);position:relative;flex:none}
+.sw.on{background:var(--gold)}
+.sw i{position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:#fff;transition:left .14s}
+.sw.on i{left:20px}
+.lang{display:flex;border:1px solid rgba(251,246,241,.4);border-radius:999px;overflow:hidden}
+.lang button{padding:4px 10px;font-size:.74rem;color:rgba(251,246,241,.78)}
+.lang button.on{background:var(--paper);color:var(--red);font-weight:600}
+.svc{display:flex;align-items:center;gap:7px;font-size:.78rem;background:rgba(0,0,0,.17);
+border-radius:999px;padding:6px 13px;line-height:1.25}
+.svc .dot{width:8px;height:8px;border-radius:50%;background:#F0C36A;flex:none}
+.svc.live .dot{background:#8BD17C;box-shadow:0 0 0 4px rgba(139,209,124,.22)}
+.svc b{font-weight:600}
+
+.nav{background:var(--card);border-bottom:1px solid var(--line);padding:0 22px;
+display:flex;gap:4px;overflow:auto}
+.nav button{padding:13px 15px 11px;font-size:.93rem;color:var(--mute);
+border-bottom:3px solid transparent;white-space:nowrap}
+.nav button.on{color:var(--ink);font-weight:600;border-bottom-color:var(--red)}
+.pill{display:inline-block;margin-left:7px;background:var(--red);color:#fff;font-size:.7rem;
+font-weight:600;padding:1px 7px;border-radius:999px;font-variant-numeric:tabular-nums}
+
+.wrap{padding:20px 22px;max-width:1180px}
+.chips{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;
+padding:7px 14px;font-size:.84rem;color:var(--mute)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:500}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(304px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:9px;
+border-left:4px solid var(--line);padding:14px 16px 13px}
+.card.new{border-left-color:var(--red)}
+.card.prep{border-left-color:var(--gold)}
+.card.done{border-left-color:var(--olive);opacity:.62}
+.ch{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.ono{font-family:Bitter,serif;font-weight:700;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.cage{margin-left:auto;font-size:.76rem;color:var(--mute);font-variant-numeric:tabular-nums}
+.cplace{font-size:.79rem;color:var(--blue);font-weight:500;margin-bottom:9px;line-height:1.5}
+.tag{display:inline-block;background:var(--gold);color:#2B1A06;font-size:.66rem;font-weight:700;
+letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-right:6px}
+.tag.pick{background:var(--blue);color:#fff}
+.ctel{color:var(--red);font-weight:600;text-decoration:none;white-space:nowrap}
+.dst{font-style:normal;color:var(--red);font-weight:500}
+.ceta{font-size:.76rem;color:var(--mute);margin-bottom:9px;font-variant-numeric:tabular-nums}
+.it{display:flex;font-size:.9rem;padding:3px 0}
+.it span{flex:1}
+.it b{font-weight:600;margin-right:9px;min-width:22px;font-variant-numeric:tabular-nums}
+.cnote{font-size:.82rem;color:var(--mute);background:var(--paper);border-radius:5px;padding:7px 9px;margin-top:9px}
+.cf{display:flex;align-items:center;gap:9px;margin-top:12px;border-top:1px solid var(--line);padding-top:11px}
+.ctot{font-family:Bitter,serif;font-size:1.06rem;flex:1;font-variant-numeric:tabular-nums}
+.act{padding:8px 15px;border-radius:6px;font-size:.86rem;font-weight:600}
+.act.p{background:var(--gold);color:#2B1A06}
+.act.g{background:var(--olive);color:#fff}
+.act.q{color:var(--mute);font-weight:400;font-size:.8rem;padding:8px 4px;
+text-decoration:underline;text-underline-offset:3px}
+
+.cook{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:12px}
+.ck{background:var(--card);border:1px solid var(--line);border-radius:9px;
+padding:16px 17px;display:flex;align-items:center;gap:14px}
+.ckq{font-family:Bitter,serif;font-weight:700;font-size:2.1rem;color:var(--red);
+min-width:48px;line-height:1;font-variant-numeric:tabular-nums}
+.ckn{font-size:.97rem;line-height:1.3}
+.lead{color:var(--mute);font-size:.88rem;margin-bottom:16px;max-width:62ch}
+h2.sect{font-size:1.3rem;margin-bottom:6px}
+
+.run{background:var(--card);border:1px solid var(--line);border-radius:9px;margin-bottom:13px;overflow:hidden}
+.rh{background:var(--paper);padding:12px 17px;display:flex;align-items:center;gap:12px;
+border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rh h3{font-size:1.04rem}
+.rh em{font-style:normal;font-size:.8rem;color:var(--mute)}
+.rb{padding:5px 17px 13px}
+.rl{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem;align-items:baseline}
+.rl:last-child{border-bottom:0}
+.rl b{min-width:52px;font-family:Bitter,serif;font-variant-numeric:tabular-nums}
+.rl .w{min-width:84px;font-weight:500}
+.rl .x{flex:1;color:var(--mute)}
+
+.mrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+border-radius:8px;padding:12px 16px;margin-bottom:8px;flex-wrap:wrap}
+.mrow .mn{flex:1;min-width:150px;font-size:.96rem}
+.mrow .mn i{display:block;font-style:normal;font-size:.78rem;color:var(--mute);margin-top:2px}
+.mrow.out .mn{opacity:.45}
+.mrow input{width:78px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;
+font-family:inherit;font-size:.9rem;text-align:right;background:#fff;color:inherit}
+.mrow input.slug{width:118px;text-align:left}
+.mact{border:1px solid var(--line);border-radius:6px;padding:7px 13px;font-size:.82rem;color:var(--mute);background:#fff}
+.mact.out{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
+.mact.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:500}
+.mact.veg.on{background:var(--olive);border-color:var(--olive)}
+.mh{font-size:.98rem;font-weight:700;margin:22px 0 9px}
+.none{color:var(--mute);font-size:.92rem;padding:34px 0}
+.thumb{width:44px;height:44px;border-radius:6px;object-fit:cover;background:var(--paper);flex:none}
+.thumb.miss{border:1px dashed var(--line)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:20px 22px;max-width:640px;margin-bottom:16px}
+.panel h3{font-size:1.06rem;margin-bottom:4px}
+.panel p.hint{color:var(--mute);font-size:.84rem;margin:0 0 16px}
+.f{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:15px}
+.f label{display:block;font-size:.78rem;color:var(--mute);margin-bottom:5px}
+.f input[type=time],.f input[type=number],.f input[type=text]{padding:10px 11px;border:1px solid var(--line);
+border-radius:7px;font-family:inherit;font-size:.95rem;background:#fff;color:inherit}
+.f input[type=time]{font-variant-numeric:tabular-nums}
+.f input[type=number]{width:96px;text-align:right}
+.f .wide{flex:1;min-width:230px}
+.f .wide input{width:100%}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.day{border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px 11px;font-size:.83rem;color:var(--mute)}
+.day.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
+.save{background:var(--ink);color:var(--paper);padding:12px 22px;border-radius:7px;font-weight:600;font-size:.92rem}
+.save:disabled{opacity:.5}
+.saved{color:var(--olive);font-size:.84rem;margin-left:12px;font-weight:500}
+.bad{color:var(--red);font-size:.84rem;margin-left:12px;font-weight:500}
+.pause{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:8px;
+padding:13px 15px;background:var(--paper);margin-bottom:16px;width:100%;text-align:left}
+.pause .sw{background:#CFC3BA}
+.pause .sw.on{background:var(--red)}
+.pause div{flex:1}
+.pause b{display:block;font-size:.93rem}
+.pause small{color:var(--mute);font-size:.79rem}
+
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:13px}
+.qc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:15px;
+display:flex;flex-direction:column;align-items:center;text-align:center}
+.qc.off{opacity:.5}
+.qc img{width:150px;height:150px;display:block;background:var(--paper);border-radius:6px}
+.qc h4{font-family:Bitter,serif;font-size:.95rem;margin:11px 0 3px;line-height:1.25}
+.qc .slug{font-size:.75rem;color:var(--mute);word-break:break-all;line-height:1.4}
+.qc .tally{font-size:.74rem;color:var(--blue);margin-top:5px;font-variant-numeric:tabular-nums}
+.qc .qa{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap;justify-content:center}
+.qc .qa button,.qc .qa a{border:1px solid var(--line);border-radius:6px;padding:6px 10px;
+font-size:.77rem;color:var(--mute);text-decoration:none;background:#fff;display:inline-block}
+.qnote{display:none}
+@media print{
+  body{background:#fff;padding:0}
+  .top,.nav,.panel,.chips,.lead,h2.sect,.qc .qa,.qc .tally{display:none!important}
+  .wrap{padding:0;max-width:none}
+  .qgrid{grid-template-columns:repeat(2,1fr);gap:0}
+  .qc{border:1px dashed #bbb;border-radius:0;break-inside:avoid;padding:26px 14px;height:48vh;justify-content:center}
+  .qc.off{display:none}
+  .qc img{width:230px;height:230px}
+  .qc h4{font-size:1.2rem}
+  .qnote{display:block;font-size:.8rem;color:#555;margin-top:9px;line-height:1.4}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+const T = {
+  sq:{gate:"Kuzhina",gateSub:"Fjalëkalimi i kuzhinës",enter:"Hyr",wrong:"Fjalëkalim i gabuar.",
+    tabs:{flow:"Porositë",kitchen:"Kuzhina",runs:"Dërgesat",menu:"Menyja",hours:"Orari",codes:"Kodet QR",month:"Muaji"},
+    today:"Sot",orders:"porosi",revenue:"Qarkullimi",all:"Të gjitha",new:"Të reja",
+    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",
+    noOrders:"Ende asnjë porosi sot.",noneHere:"Asgjë këtu për momentin.",
+    cook:"Për t'u gatuar",cookNote:"Numërimi i artikujve që nuk janë dërguar ende.",
+    allCooked:"S'ka gjë në pritje.",sendAll:"Të gjitha u dërguan",people:"persona",
+    avail:"Në dispozicion",soldOut:"Nuk ka sot",markOut:"Shëno si të mbaruar",markIn:"Ktheje në menu",
+    den:"den",min:"min",sound:"Zilja",note:"Shënim",save:"Ruaj",saved:"U ruajt",
+    eta:"Pritet",special:"Sot",veg:"Pa mish",photo:"Foto",
+    open:"Hapur",closed:"Mbyllur",paused:"Ndalur",
+    hoursTitle:"Orari i porosive",
+    hoursNote:"Klientët mund të porosisin vetëm brenda kësaj kohe. Ora e Shkupit.",
+    from:"Nga",to:"Deri",prep:"Kohë dorëzimi",prepUnit:"minuta pas porosisë",
+    closedDays:"Ditët e pushimit",
+    pauseTitle:"Ndalo porositë",pauseNote:"Menyja mbetet e dukshme, por porositë nuk pranohen.",
+    pausedNow:"Porositë janë ndaluar tani.",
+    noticeTitle:"Shënim për klientët",
+    noticeNote:"Shfaqet në kokë të faqes së porosive. Lëre bosh për t'u hequr.",
+    noticeSq:"Shqip",noticeMk:"Makedonisht",badHours:"Ora e mbylljes duhet të jetë pas hapjes.",
+    codesTitle:"Kodet QR dhe linket",
+    codesNote:"Një kod për çdo kompani. Printoji dhe vendosi te kuzhina e firmës — punëtorët skanojnë dhe porosia vjen me emrin e firmës.",
+    print:"Printo të gjitha",copy:"Kopjo linkin",copied:"U kopjua",openLink:"Hape",
+    dlQr:"Shkarko QR",offNow:"Jo aktive",turnOff:"Çaktivizo",turnOn:"Aktivizo",
+    scanMe:"Skano me telefon për të porositur drekën",
+    addTitle:"Shto kompani të re",
+    addNote:"Emri krijon linkun automatikisht. Pas ruajtjes, kodi QR shfaqet në listë.",
+    name:"Emri i kompanisë",street:"Adresa",phone:"Telefoni",add:"Shto",
+    needName:"Shkruaj emrin e kompanisë.",
+    direct:"Porosi direkte",delivery:"Dorëzim",pickup:"Marrje vetë",
+    monthTitle:"Totali i muajit sipas kompanisë",monthNote:"Vetëm porositë e dërguara.",monthAll:"Gjithsej muaji",
+    cats:{special:"Sot",main:"Gatime kryesore",grill:"Nga skara",pite:"Pite",side:"Anësore",
+      soda:"Të gazuara",still:"Pa gaz",water:"Ujë",drink:"Pije"},
+    dayNames:["Die","Hën","Mar","Mër","Enj","Pre","Sht"]},
+  mk:{gate:"Кујна",gateSub:"Лозинка за кујната",enter:"Влези",wrong:"Погрешна лозинка.",
+    tabs:{flow:"Порачки",kitchen:"Кујна",runs:"Достави",menu:"Мени",hours:"Работно време",codes:"QR кодови",month:"Месец"},
+    today:"Денес",orders:"порачки",revenue:"Промет",all:"Сите",new:"Нови",
+    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",
+    noOrders:"Сè уште нема порачки денес.",noneHere:"Тука нема ништо во моментов.",
+    cook:"За готвење",cookNote:"Збир на артикли што сè уште не се испратени.",
+    allCooked:"Нема ништо во ред.",sendAll:"Сите се испратени",people:"лица",
+    avail:"Достапно",soldOut:"Нема денес",markOut:"Означи како снема",markIn:"Врати во мени",
+    den:"ден",min:"мин",sound:"Ѕвонче",note:"Белешка",save:"Зачувај",saved:"Зачувано",
+    eta:"Се очекува",special:"Денес",veg:"Без месо",photo:"Слика",
+    open:"Отворено",closed:"Затворено",paused:"Запрено",
+    hoursTitle:"Работно време за порачки",
+    hoursNote:"Клиентите можат да порачуваат само во ова време. Скопско време.",
+    from:"Од",to:"До",prep:"Време на достава",prepUnit:"минути по порачката",
+    closedDays:"Неработни денови",
+    pauseTitle:"Запри порачки",pauseNote:"Менито останува видливо, но порачки не се примаат.",
+    pausedNow:"Порачките се запрени во моментов.",
+    noticeTitle:"Белешка за клиентите",
+    noticeNote:"Се прикажува на почетокот на страната за порачки. Остави празно за да се тргне.",
+    noticeSq:"Албански",noticeMk:"Македонски",badHours:"Часот на затворање мора да е по отворањето.",
+    codesTitle:"QR кодови и линкови",
+    codesNote:"Еден код за секоја фирма. Испечати и залепи во кујната на фирмата — работниците скенираат и порачката доаѓа со име на фирмата.",
+    print:"Испечати ги сите",copy:"Копирај линк",copied:"Копирано",openLink:"Отвори",
+    dlQr:"Преземи QR",offNow:"Неактивна",turnOff:"Деактивирај",turnOn:"Активирај",
+    scanMe:"Скенирај со телефон за да порачаш ручек",
+    addTitle:"Додај нова фирма",
+    addNote:"Името автоматски го создава линкот. По зачувување, QR кодот се појавува во списокот.",
+    name:"Име на фирмата",street:"Адреса",phone:"Телефон",add:"Додај",
+    needName:"Напиши име на фирмата.",
+    direct:"Директни порачки",delivery:"Достава",pickup:"Земање",
+    monthTitle:"Месечен збир по компанија",monthNote:"Само испратени порачки.",monthAll:"Вкупно за месецот",
+    cats:{special:"Денес",main:"Главни јадења",grill:"Од скара",pite:"Пити",side:"Прилози",
+      soda:"Газирани",still:"Негазирани",water:"Вода",drink:"Пијалоци"},
+    dayNames:["Нед","Пон","Вто","Сре","Чет","Пет","Саб"]}
+};
+
+const $ = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let lang = localStorage.getItem("abija-lang") || "sq";
+let key = sessionStorage.getItem("abija-key") || "";
+let tab = "flow", filter = "all", bell = true;
+let d = null, month = null, gateErr = false, seen = new Set(), first = true;
+/* Forms are held here, not read off the DOM, so the 12-second poll can never
+   overwrite something the cook is halfway through typing. */
+let form = null, addForm = {name:"",street:"",phone:""}, flash = "", flashBad = "";
+
+const t = () => T[lang];
+const nm = o => lang === "sq" ? o.name_sq : o.name_mk;
+const orderUrl = slug => `${location.origin}/?k=${slug}`;
+
+/* An order off the plain link has no company name to print. What the driver
+   needs instead is the mode, the address the customer typed, and a number to
+   ring on the way. */
+function destLine(o) {
+  const L = t();
+  if (o.location) return `<div class="cplace">${esc(o.location)}</div>`;
+  const pick = o.fulfilment === "pickup";
+  const tel = o.contact_phone
+    ? `<a class="ctel" href="tel:${esc(o.contact_phone.replace(/[^\d+]/g, ""))}">${esc(o.contact_phone)}</a>`
+    : "";
+  return `<div class="cplace"><span class="tag${pick ? " pick" : ""}">${pick ? L.pickup : L.delivery}</span>
+    ${o.address ? esc(o.address) + " · " : ""}${tel}</div>`;
+}
+
+const destText = o => o.fulfilment === "pickup"
+  ? t().pickup
+  : [o.address, o.contact_phone].filter(Boolean).join(" · ");
+
+function ping() {
+  if (!bell) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, .16].forEach((dl, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.value = i ? 1050 : 780;
+      g.gain.setValueAtTime(.0001, ctx.currentTime + dl);
+      g.gain.exponentialRampToValueAtTime(.22, ctx.currentTime + dl + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + dl + .14);
+      o.connect(g).connect(ctx.destination);
+      o.start(ctx.currentTime + dl); o.stop(ctx.currentTime + dl + .16);
+    });
+  } catch {}
+}
+
+async function api(path, opts = {}) {
+  const r = await fetch("/api/kitchen" + path, {
+    ...opts, headers: { "x-abija-key": key, "Content-Type": "application/json", ...(opts.headers || {}) }
+  });
+  if (r.status === 401) { key = ""; sessionStorage.removeItem("abija-key"); gateErr = true; render(); throw new Error("auth"); }
+  return r.json();
+}
+
+async function poll() {
+  if (!key) return;
+  try {
+    const next = await api("");
+    const fresh = next.orders.filter(o => o.status === "new" && !seen.has(o.id));
+    next.orders.forEach(o => seen.add(o.id));
+    if (fresh.length && !first) ping();
+    first = false;
+    d = next;
+    if (!form) form = { ...next.settings };
+    /* Someone is typing: take the data, leave the screen alone. */
+    if (document.activeElement?.matches("input, textarea")) return;
+    render();
+  } catch {}
+}
+
+const ago = ts => {
+  const m = Math.floor((Date.now() - new Date(ts).getTime()) / 60000);
+  return (m < 1 ? "<1" : m) + " " + t().min;
+};
+
+function svcChip() {
+  const L = t(), s = d.service;
+  if (s.paused) return `<div class="svc"><span class="dot"></span><b>${L.paused}</b></div>`;
+  if (!s.open) return `<div class="svc"><span class="dot"></span><b>${L.closed}</b>
+    <span class="num">${esc(s.from)}–${esc(s.to)}</span></div>`;
+  return `<div class="svc live"><span class="dot"></span><b>${L.open}</b>
+    <span class="num">${esc(s.from)}–${esc(s.to)}</span></div>`;
+}
+
+function hoursTab() {
+  const L = t(), f = form || {};
+  return `<h2 class="sect">${L.hoursTitle}</h2><p class="lead">${L.hoursNote}</p>
+  <div class="panel">
+    <button class="pause" data-pause aria-pressed="${!!f.paused}">
+      <span class="sw${f.paused ? " on" : ""}"><i></i></span>
+      <div><b>${L.pauseTitle}</b><small>${f.paused ? L.pausedNow : L.pauseNote}</small></div>
+    </button>
+    <div class="f">
+      <div><label for="from">${L.from}</label>
+        <input id="from" type="time" value="${esc(f.open_from)}" data-set="open_from" step="300"></div>
+      <div><label for="to">${L.to}</label>
+        <input id="to" type="time" value="${esc(f.open_to)}" data-set="open_to" step="300"></div>
+      <div><label for="prep">${L.prep}</label>
+        <input id="prep" type="number" min="0" max="240" step="5" class="num"
+          value="${Number(f.prep_minutes) || 0}" data-set="prep_minutes"></div>
+      <div style="align-self:flex-end;color:var(--mute);font-size:.8rem;padding-bottom:11px">${L.prepUnit}</div>
+    </div>
+    <label style="display:block;font-size:.78rem;color:var(--mute);margin-bottom:7px">${L.closedDays}</label>
+    <div class="days">${L.dayNames.map((n, i) =>
+      `<button class="day${(f.closed_weekdays || []).includes(i) ? " on" : ""}" data-day="${i}">${n}</button>`).join("")}</div>
+    <div style="margin-top:20px">
+      <button class="save" data-save-settings>${L.save}</button>
+      ${flash ? `<span class="saved">${flash}</span>` : ""}${flashBad ? `<span class="bad">${flashBad}</span>` : ""}
+    </div>
+  </div>
+  <div class="panel">
+    <h3>${L.noticeTitle}</h3><p class="hint">${L.noticeNote}</p>
+    <div class="f"><div class="wide"><label for="nsq">${L.noticeSq}</label>
+      <input id="nsq" type="text" maxlength="200" value="${esc(f.notice_sq)}" data-set="notice_sq"></div></div>
+    <div class="f"><div class="wide"><label for="nmk">${L.noticeMk}</label>
+      <input id="nmk" type="text" maxlength="200" value="${esc(f.notice_mk)}" data-set="notice_mk"></div></div>
+    <button class="save" data-save-settings>${L.save}</button>
+  </div>`;
+}
+
+function codesTab() {
+  const L = t();
+  return `<h2 class="sect">${L.codesTitle}</h2><p class="lead">${L.codesNote}</p>
+  <div class="panel">
+    <h3>${L.addTitle}</h3><p class="hint">${L.addNote}</p>
+    <div class="f">
+      <div class="wide"><label for="cn">${L.name}</label>
+        <input id="cn" type="text" maxlength="80" value="${esc(addForm.name)}" data-add="name"></div>
+      <div class="wide"><label for="cs">${L.street}</label>
+        <input id="cs" type="text" maxlength="120" value="${esc(addForm.street)}" data-add="street"></div>
+      <div class="wide"><label for="cp">${L.phone}</label>
+        <input id="cp" type="text" maxlength="40" value="${esc(addForm.phone)}" data-add="phone"></div>
+    </div>
+    <button class="save" data-add-loc>${L.add}</button>
+    ${flashBad ? `<span class="bad">${flashBad}</span>` : ""}
+  </div>
+  <div class="chips"><button class="chip" data-print>${L.print}</button></div>
+  <div class="qgrid">` + d.locations.map(l => `<div class="qc${l.active ? "" : " off"}">
+    <img src="/api/qr?k=${encodeURIComponent(l.slug)}&prod=1" alt="QR ${esc(l.name)}" loading="lazy">
+    <h4>${esc(l.name)}</h4>
+    <div class="slug">/?k=${esc(l.slug)}</div>
+    <div class="qnote">${L.scanMe}<br><b>Të Abija</b></div>
+    ${l.active ? `<div class="tally">${l.orders_today} ${L.orders} · ${L.today}</div>`
+               : `<div class="tally" style="color:var(--red)">${L.offNow}</div>`}
+    <div class="qa">
+      <button data-copy="${esc(l.slug)}">${L.copy}</button>
+      <a href="${esc(orderUrl(l.slug))}" target="_blank" rel="noopener">${L.openLink}</a>
+      <a href="/api/qr?k=${encodeURIComponent(l.slug)}&prod=1" download="qr-${esc(l.slug)}.svg">${L.dlQr}</a>
+      <button data-loc-active="${esc(l.slug)}" data-to="${l.active ? "0" : "1"}">
+        ${l.active ? L.turnOff : L.turnOn}</button>
+    </div></div>`).join("") + `</div>`;
+}
+
+function menuTab() {
+  const L = t();
+  let h = "";
+  for (const cat of ["special", "main", "grill", "pite", "side", "soda", "still", "water", "drink"]) {
+    const rows = d.menu.filter(i => cat === "special" ? i.is_special : (i.category === cat && !i.is_special));
+    if (!rows.length) continue;
+    h += `<h3 class="mh">${L.cats[cat]}</h3>` + rows.map(i => `<div class="mrow${i.available ? "" : " out"}">
+      ${i.photo
+        ? `<img class="thumb" src="/.netlify/images?url=${encodeURIComponent("/photos/" + i.photo + ".jpg")}&w=88&h=88&fit=cover" alt="">`
+        : `<span class="thumb miss"></span>`}
+      <div class="mn">${esc(nm(i))}<i>${i.available ? L.avail : L.soldOut}</i></div>
+      <input class="slug" type="text" value="${esc(i.photo || "")}" placeholder="${L.photo}" data-photo="${i.id}">
+      <input class="num" type="number" min="0" step="5" value="${i.price}" data-price="${i.id}">
+      <button class="mact" data-save="${i.id}">${L.save}</button>
+      <button class="mact${i.is_special ? " on" : ""}" data-special="${i.id}" data-to="${i.is_special ? "0" : "1"}">${L.special}</button>
+      <button class="mact veg${i.is_veg ? " on" : ""}" data-veg="${i.id}" data-to="${i.is_veg ? "0" : "1"}">${L.veg}</button>
+      <button class="mact${i.available ? "" : " out"}" data-avail="${i.id}" data-to="${i.available ? "0" : "1"}">
+        ${i.available ? L.markOut : L.markIn}</button></div>`).join("");
+  }
+  return h;
+}
+
+function render() {
+  const L = t();
+
+  if (!key) {
+    $.innerHTML = `<div class="gate"><h1>${L.gate}</h1><p>${L.gateSub}</p>
+      <input id="pw" type="password" autocomplete="current-password">
+      <button data-login>${L.enter}</button>
+      ${gateErr ? `<div class="warn">${L.wrong}</div>` : ""}</div>`;
+    document.getElementById("pw")?.focus();
+    return;
+  }
+  if (!d) { $.innerHTML = `<div class="wrap"><p class="none">…</p></div>`; return; }
+
+  const live = d.orders.filter(o => o.status !== "done");
+  const revenue = d.orders.reduce((a, o) => a + o.total, 0);
+  const c = {
+    all: d.orders.length,
+    new: d.orders.filter(o => o.status === "new").length,
+    prep: d.orders.filter(o => o.status === "prep").length,
+    done: d.orders.filter(o => o.status === "done").length
+  };
+  const cookTotal = live.reduce((a, o) => a + o.items.reduce((b, i) => b + i.qty, 0), 0);
+
+  let h = `<header class="top">
+    <div class="logo">Të Abija<span>Kuzhina Popullore · Народна Кујна</span></div>
+    <div class="stat"><b class="num">${c.all}</b><span>${L.today} · ${L.orders}</span></div>
+    <div class="stat"><b class="num">${revenue.toLocaleString()}</b><span>${L.revenue} · ${L.den}</span></div>
+    ${svcChip()}
+    <div class="spacer"></div>
+    <button class="tgl" data-bell aria-pressed="${bell}"><span class="sw${bell ? " on" : ""}"><i></i></span>${L.sound}</button>
+    <div class="lang">
+      <button class="${lang === "sq" ? "on" : ""}" data-lang="sq">SQ</button>
+      <button class="${lang === "mk" ? "on" : ""}" data-lang="mk">MK</button>
+    </div></header>
+  <nav class="nav">` + Object.entries(L.tabs).map(([k, v]) =>
+    `<button class="${tab === k ? "on" : ""}" data-tab="${k}">${v}${
+      k === "flow" && c.new ? `<span class="pill num">${c.new}</span>` :
+      k === "kitchen" && cookTotal ? `<span class="pill num">${cookTotal}</span>` : ""}</button>`).join("") + `</nav><div class="wrap">`;
+
+  if (tab === "flow") {
+    h += `<div class="chips">` + [["all", L.all, c.all], ["new", L.new, c.new], ["prep", L.prep, c.prep], ["done", L.done, c.done]]
+      .map(([k, lab, n]) => `<button class="chip${filter === k ? " on" : ""}" data-filter="${k}">${lab} <span class="num">${n}</span></button>`).join("") + `</div>`;
+    const shown = filter === "all" ? d.orders : d.orders.filter(o => o.status === filter);
+    if (!shown.length) h += `<p class="none">${c.all ? L.noneHere : L.noOrders}</p>`;
+    h += `<div class="grid">` + shown.map(o => `<div class="card ${o.status}">
+      <div class="ch"><span class="ono">${esc(o.code)}</span><span>${esc(o.person)}</span>
+        <span class="cage">${ago(o.created_at)}</span></div>
+      ${destLine(o)}
+      ${o.eta && o.status !== "done" ? `<div class="ceta">${L.eta} ${esc(o.eta)}</div>` : ""}
+      ${o.items.map(i => `<div class="it"><b>${i.qty}×</b><span>${esc(nm(i))}</span>
+        <span class="num">${i.qty * i.unit_price}</span></div>`).join("")}
+      ${o.note ? `<div class="cnote">${L.note}: ${esc(o.note)}</div>` : ""}
+      <div class="cf"><span class="ctot num">${o.total} ${L.den}</span>
+        ${o.status === "new" ? `<button class="act p" data-status="prep" data-id="${o.id}">${L.accept}</button>` : ""}
+        ${o.status === "prep" ? `<button class="act q" data-status="new" data-id="${o.id}">${L.undo}</button>
+          <button class="act g" data-status="done" data-id="${o.id}">${L.deliver}</button>` : ""}
+        ${o.status === "done" ? `<button class="act q" data-status="prep" data-id="${o.id}">${L.undo}</button>` : ""}
+      </div></div>`).join("") + `</div>`;
+  }
+
+  if (tab === "kitchen") {
+    const m = new Map();
+    live.forEach(o => o.items.forEach(i => {
+      const k = i.item_id;
+      m.set(k, { ...i, qty: (m.get(k)?.qty || 0) + i.qty });
+    }));
+    const list = [...m.values()].sort((a, b) => b.qty - a.qty);
+    h += `<h2 class="sect">${L.cook}</h2><p class="lead">${L.cookNote}</p>`;
+    h += list.length ? `<div class="cook">` + list.map(i =>
+      `<div class="ck"><span class="ckq">${i.qty}</span><span class="ckn">${esc(nm(i))}</span></div>`).join("") + `</div>`
+      : `<p class="none">${L.allCooked}</p>`;
+  }
+
+  if (tab === "runs") {
+    const g = {};
+    live.forEach(o => ((g[o.slug || ""] = g[o.slug || ""] || []).push(o)));
+    const runs = Object.entries(g).sort((a, b) => b[1].length - a[1].length);
+    if (!runs.length) h += `<p class="none">${L.noneHere}</p>`;
+    h += runs.map(([slug, list]) => {
+      const sum = list.reduce((a, o) => a + o.total, 0);
+      /* Direct orders each go somewhere different, so there is no one-click
+         "all delivered" for that group — they get closed off one at a time. */
+      return `<div class="run"><div class="rh"><h3>${slug ? esc(list[0].location) : L.direct}</h3>
+        <em>${list.length} ${L.people}</em>
+        <span style="margin-left:auto;font-weight:600" class="num">${sum} ${L.den}</span>
+        ${slug ? `<button class="act g" data-deliver="${esc(slug)}">${L.sendAll}</button>` : ""}</div>
+        <div class="rb">` + list.map(o => `<div class="rl"><b>${esc(o.code)}</b>
+          <span class="w">${esc(o.person)}</span>
+          <span class="x">${slug ? "" : `<i class="dst">${esc(destText(o))}</i> — `}${o.items.map(i => `${i.qty}× ${esc(nm(i))}`).join(", ")}${o.note ? " — " + esc(o.note) : ""}</span>
+          <span class="num">${o.total} ${L.den}</span></div>`).join("") + `</div></div>`;
+    }).join("");
+  }
+
+  if (tab === "menu") h += menuTab();
+  if (tab === "hours") h += hoursTab();
+  if (tab === "codes") h += codesTab();
+
+  if (tab === "month") {
+    h += `<h2 class="sect">${L.monthTitle}</h2><p class="lead">${L.monthNote}</p>`;
+    if (!month) h += `<p class="none">…</p>`;
+    else if (!month.rows.length) h += `<p class="none">${L.noneHere}</p>`;
+    else h += month.rows.map(r => `<div class="mrow"><div class="mn">${esc(r.name || L.direct)}
+      <i>${r.orders} ${L.orders}</i></div>
+      <b class="num" style="font-family:Bitter,serif;font-size:1.1rem">${r.total.toLocaleString()} ${L.den}</b></div>`).join("")
+      + `<div class="mrow" style="background:var(--ink);border-color:var(--ink);color:var(--paper);margin-top:14px">
+        <div class="mn">${L.monthAll}<i style="color:rgba(251,246,241,.6)">${month.totals.orders} ${L.orders}</i></div>
+        <b class="num" style="font-family:Bitter,serif;font-size:1.2rem">${month.totals.total.toLocaleString()} ${L.den}</b></div>`;
+  }
+
+  $.innerHTML = h + `</div>`;
+}
+
+async function saveSettings() {
+  const L = t();
+  flash = ""; flashBad = "";
+  const r = await api("?action=settings", { method: "POST", body: JSON.stringify({
+    open_from: form.open_from, open_to: form.open_to,
+    prep_minutes: parseInt(form.prep_minutes, 10) || 0,
+    closed_weekdays: form.closed_weekdays || [],
+    notice_sq: form.notice_sq || "", notice_mk: form.notice_mk || ""
+  })});
+  if (r.error === "bad_hours") { flashBad = L.badHours; return render(); }
+  flash = L.saved;
+  form = { ...r.settings };
+  await poll();
+  render();
+  setTimeout(() => { if (flash) { flash = ""; if (tab === "hours") render(); } }, 2600);
+}
+
+$.addEventListener("click", async e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const L = t();
+
+  if (b.hasAttribute("data-login")) {
+    key = document.getElementById("pw").value;
+    if (!key) return;
+    sessionStorage.setItem("abija-key", key);
+    gateErr = false; first = true;
+    return poll();
+  }
+  if (b.dataset.lang) { lang = b.dataset.lang; localStorage.setItem("abija-lang", lang); return render(); }
+  if (b.hasAttribute("data-bell")) { bell = !bell; return render(); }
+  if (b.dataset.tab) {
+    tab = b.dataset.tab; flash = ""; flashBad = ""; render();
+    if (tab === "month") { month = await api("?action=month", { method: "POST", body: "{}" }); render(); }
+    return;
+  }
+  if (b.dataset.filter) { filter = b.dataset.filter; return render(); }
+  if (b.dataset.status) {
+    await api("?action=status", { method: "POST", body: JSON.stringify({ id: +b.dataset.id, status: b.dataset.status }) });
+    return poll();
+  }
+  if (b.dataset.deliver) {
+    await api("?action=deliver-location", { method: "POST", body: JSON.stringify({ slug: b.dataset.deliver }) });
+    return poll();
+  }
+  for (const [attr, field] of [["avail", "available"], ["special", "is_special"], ["veg", "is_veg"]]) {
+    if (b.dataset[attr]) {
+      await api("?action=item", { method: "POST",
+        body: JSON.stringify({ id: +b.dataset[attr], [field]: b.dataset.to === "1" }) });
+      return poll();
+    }
+  }
+  if (b.dataset.save) {
+    const price = document.querySelector(`[data-price="${b.dataset.save}"]`);
+    const photo = document.querySelector(`[data-photo="${b.dataset.save}"]`);
+    await api("?action=item", { method: "POST", body: JSON.stringify({
+      id: +b.dataset.save, price: parseInt(price.value, 10), photo: photo.value.trim() }) });
+    return poll();
+  }
+
+  /* Pause is written straight through: it is the one switch that has to take
+     effect the moment it is tapped, without a save step. */
+  if (b.hasAttribute("data-pause")) {
+    form.paused = !form.paused;
+    render();
+    await api("?action=settings", { method: "POST", body: JSON.stringify({ paused: form.paused }) });
+    return poll();
+  }
+  if (b.dataset.day) {
+    const n = +b.dataset.day;
+    const days = new Set(form.closed_weekdays || []);
+    days.has(n) ? days.delete(n) : days.add(n);
+    form.closed_weekdays = [...days].sort();
+    return render();
+  }
+  if (b.hasAttribute("data-save-settings")) return saveSettings();
+
+  if (b.hasAttribute("data-add-loc")) {
+    flashBad = "";
+    if (!addForm.name.trim()) { flashBad = L.needName; return render(); }
+    const r = await api("?action=location-add", { method: "POST", body: JSON.stringify(addForm) });
+    if (r.error) { flashBad = L.needName; return render(); }
+    addForm = { name: "", street: "", phone: "" };
+    return poll();
+  }
+  if (b.dataset.locActive) {
+    await api("?action=location-active", { method: "POST",
+      body: JSON.stringify({ slug: b.dataset.locActive, active: b.dataset.to === "1" }) });
+    return poll();
+  }
+  if (b.dataset.copy) {
+    try { await navigator.clipboard.writeText(orderUrl(b.dataset.copy)); } catch {}
+    const was = b.textContent;
+    b.textContent = L.copied;
+    setTimeout(() => { b.textContent = was; }, 1400);
+    return;
+  }
+  if (b.hasAttribute("data-print")) return window.print();
+});
+
+$.addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.set && form) form[el.dataset.set] = el.value;
+  if (el.dataset.add) addForm[el.dataset.add] = el.value;
+});
+
+$.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "pw") document.querySelector("[data-login]")?.click();
+  if (e.key === "Enter" && e.target.dataset?.set) document.querySelector("[data-save-settings]")?.click();
+});
+
+render();
+if (key) poll();
+setInterval(poll, 12000);
+</script>
+</body>
+</html>
