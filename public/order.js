@@ -339,7 +339,17 @@ async function pollActive() {
     }
     render();
   }
-  if (o?.status !== "done") pollTimer = setTimeout(pollActive, 25000);
+  /* Poll hard for the acceptance, gently for the delivery. Waiting to hear
+     "we are making it" is the anxious part and a customer watches the screen
+     for it; the half hour after that they spend working. Checking every four
+     seconds all the way through would burn the function quota for nothing. */
+  if (o?.status !== "done") {
+    const waited = Date.now() - (s.active?.placedAt || Date.now());
+    const gap = o?.status === "new"
+      ? (waited < 300000 ? 4000 : 10000)   /* unaccepted: 4s, easing after 5 min */
+      : 20000;                             /* cooking: the delivery is not imminent */
+    pollTimer = setTimeout(pollActive, gap);
+  }
 }
 
 /* ---------- basket ---------- */
@@ -868,6 +878,7 @@ async function send() {
       day: today(),
       status: j.status,
       eta: j.eta,
+      placedAt: Date.now(),
     };
     localStorage.setItem("abija-active", JSON.stringify(act));
     s.active = act;
@@ -897,6 +908,8 @@ setInterval(() => {
 
 /* Someone leaves the tab open all morning: pick up sold-out changes on return. */
 document.addEventListener("visibilitychange", () => {
+  /* Their order may have been accepted while the phone was in a pocket. */
+  if (document.visibilityState === "visible" && (s.active || s.done)) pollActive();
   if (document.visibilityState === "visible" && !s.done && s.data) load();
 });
 

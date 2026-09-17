@@ -176,6 +176,19 @@ display:flex;flex-direction:column;align-items:center;text-align:center}
 .qc .qa button,.qc .qa a{border:1px solid var(--line);border-radius:6px;padding:6px 10px;
 font-size:.77rem;color:var(--mute);text-decoration:none;background:#fff;display:inline-block}
 .qnote{display:none}
+/* The banner sits over everything and does not go away on its own. An order
+   missed is an order the customer rings about, so this is deliberately loud. */
+.alarm{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;
+background:var(--red);color:#fff;padding:14px 22px;box-shadow:0 6px 20px rgba(0,0,0,.28);
+animation:alarmpulse 1.1s ease-in-out infinite}
+@keyframes alarmpulse{0%,100%{background:var(--red)}50%{background:#8a0c12}}
+.alarmtxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.alarmtxt b{font-family:Bitter,serif;font-size:1.1rem;letter-spacing:.02em}
+.alarmtxt span{font-size:.92rem;opacity:.9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alarmbtn{background:#fff;color:var(--red);border:0;border-radius:8px;
+padding:12px 26px;font:600 1rem Rubik,sans-serif;cursor:pointer;flex:0 0 auto}
+@media (prefers-reduced-motion:reduce){.alarm{animation:none}}
+
 /* ============================================================== TOUCH SCREENS
    The board runs all day on a tablet propped by the pass. It is read from a
    step or two away, and tapped by someone holding a pan. So: type goes up,
@@ -186,6 +199,10 @@ font-size:.77rem;color:var(--mute);text-decoration:none;background:#fff;display:
 @media (pointer:coarse) and (min-width:820px){
   body{padding-bottom:64px}
 
+  .alarm{padding:22px 30px;gap:26px}
+  .alarmtxt b{font-size:1.7rem}
+  .alarmtxt span{font-size:1.2rem}
+  .alarmbtn{padding:20px 44px;font-size:1.3rem;min-height:68px;border-radius:10px}
   .top{padding:20px 30px;gap:30px}
   .logo{font-size:1.65rem}
   .logo span{font-size:.9rem;margin-top:4px}
@@ -304,7 +321,7 @@ const T = {
   sq:{gate:"Kuzhina",gateSub:"Fjalëkalimi i kuzhinës",enter:"Hyr",wrong:"Fjalëkalim i gabuar.",
     tabs:{flow:"Porositë",kitchen:"Kuzhina",runs:"Dërgesat",menu:"Menyja",hours:"Orari",codes:"Kodet QR",month:"Muaji"},
     today:"Sot",orders:"porosi",revenue:"Qarkullimi",all:"Të gjitha",new:"Të reja",
-    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",ordNo:"Porosia nr.",orderer:"Porositësi",firm:"Firma",
+    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",ordNo:"Porosia nr.",orderer:"Porositësi",firm:"Firma",newOrd:"POROSI E RE",newOrds:"POROSI TË REJA",ack:"Shiko",
     noOrders:"Ende asnjë porosi sot.",noneHere:"Asgjë këtu për momentin.",
     cook:"Për t'u gatuar",cookNote:"Numërimi i artikujve që nuk janë dërguar ende.",
     allCooked:"S'ka gjë në pritje.",sendAll:"Të gjitha u dërguan",people:"persona",
@@ -338,7 +355,7 @@ const T = {
   mk:{gate:"Кујна",gateSub:"Лозинка за кујната",enter:"Влези",wrong:"Погрешна лозинка.",
     tabs:{flow:"Порачки",kitchen:"Кујна",runs:"Достави",menu:"Мени",hours:"Работно време",codes:"QR кодови",month:"Месец"},
     today:"Денес",orders:"порачки",revenue:"Промет",all:"Сите",new:"Нови",
-    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",ordNo:"Порачка бр.",orderer:"Нарачува",firm:"Фирма",
+    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",ordNo:"Порачка бр.",orderer:"Нарачува",firm:"Фирма",newOrd:"НОВА ПОРАЧКА",newOrds:"НОВИ ПОРАЧКИ",ack:"Види",
     noOrders:"Сè уште нема порачки денес.",noneHere:"Тука нема ништо во моментов.",
     cook:"За готвење",cookNote:"Збир на артикли што сè уште не се испратени.",
     allCooked:"Нема ништо во ред.",sendAll:"Сите се испратени",people:"лица",
@@ -379,6 +396,7 @@ let key = sessionStorage.getItem("abija-key") || "";
 let tab = "flow", filter = "all", bell = true;
 let killing = null, killTimer = null;
 let d = null, month = null, gateErr = false, seen = new Set(), first = true;
+let alertQ = [], nagTimer = null;
 /* Forms are held here, not read off the DOM, so the 12-second poll can never
    overwrite something the cook is halfway through typing. */
 let form = null, addForm = {name:"",street:"",phone:""}, flash = "", flashBad = "";
@@ -469,8 +487,19 @@ async function poll() {
     const next = await api("");
     const fresh = next.orders.filter(o => o.status === "new" && !seen.has(o.id));
     next.orders.forEach(o => seen.add(o.id));
-    if (fresh.length && !first) ping();
+    if (fresh.length && !first) {
+      /* Queue them and keep making noise. A single chime at the moment an
+         order lands is missed if he is at the grill, so the bell repeats
+         every fifteen seconds until someone actually looks. */
+      alertQ.push(...fresh.map(o => ({ id: o.id, code: o.code, person: o.person })));
+      ping();
+      clearInterval(nagTimer);
+      nagTimer = setInterval(ping, 15000);
+    }
     first = false;
+    document.title = alertQ.length
+      ? `(${alertQ.length}) Te Abija — Kuzhina`
+      : "Te Abija — Kuzhina";
     d = next;
     if (!form) form = { ...next.settings };
     /* Someone is typing: take the data, leave the screen alone. */
@@ -607,7 +636,12 @@ function render() {
   };
   const cookTotal = live.reduce((a, o) => a + o.items.reduce((b, i) => b + i.qty, 0), 0);
 
-  let h = `<header class="top">
+  let h = alertQ.length ? `<div class="alarm">
+    <div class="alarmtxt"><b>${alertQ.length > 1 ? L.newOrds : L.newOrd}${alertQ.length > 1 ? ` · ${alertQ.length}` : ""}</b>
+      <span>${alertQ.slice(-3).map(a => `${esc(a.code)} ${esc(a.person)}`).join(" · ")}</span></div>
+    <button class="alarmbtn" data-ack>${L.ack}</button></div>` : "";
+
+  h += `<header class="top">
     <div class="logo">Te Abija<span>Kuzhina Popullore · Народна Кујна</span></div>
     <div class="stat"><b class="num">${c.all}</b><span>${L.today} · ${L.orders}</span></div>
     <div class="stat"><b class="num">${revenue.toLocaleString()}</b><span>${L.revenue} · ${L.den}</span></div>
@@ -730,6 +764,13 @@ $.addEventListener("click", async e => {
     return poll();
   }
   if (b.dataset.lang) { lang = b.dataset.lang; localStorage.setItem("abija-lang", lang); return render(); }
+  if (b.hasAttribute("data-ack")) {
+    alertQ = [];
+    clearInterval(nagTimer); nagTimer = null;
+    document.title = "Te Abija — Kuzhina";
+    tab = "flow"; filter = "new";
+    return render();
+  }
   if (b.dataset.del) {
     const id = Number(b.dataset.del);
     if (killing !== id) {                       /* first tap: arm it */
@@ -827,7 +868,12 @@ $.addEventListener("keydown", e => {
 
 render();
 if (key) poll();
-setInterval(poll, 12000);
+setInterval(poll, 6000);
+/* A backgrounded tab gets its timers throttled to about once a minute, so
+   catch up the instant the screen comes back rather than waiting it out. */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && key) poll();
+});
 
 /* The board lives on a screen nobody touches for hours. A sleeping screen
    plays no bell, so hold a wake lock and take it back after any sleep,
