@@ -321,7 +321,7 @@ const T = {
   sq:{gate:"Kuzhina",gateSub:"Fjalëkalimi i kuzhinës",enter:"Hyr",wrong:"Fjalëkalim i gabuar.",
     tabs:{flow:"Porositë",kitchen:"Kuzhina",runs:"Dërgesat",menu:"Menyja",hours:"Orari",codes:"Kodet QR",month:"Muaji"},
     today:"Sot",orders:"porosi",revenue:"Qarkullimi",all:"Të gjitha",new:"Të reja",
-    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",ordNo:"Porosia nr.",orderer:"Porositësi",firm:"Firma",newOrd:"POROSI E RE",newOrds:"POROSI TË REJA",ack:"Shiko",
+    prep:"Në përgatitje",done:"Të dërguara",accept:"Merre",deliver:"U dërgua",undo:"Kthe",del:"Anulo",delSure:"Anulo vërtet?",brand:"Te Abija",sub:"Kuzhina Popullore",kitchen:"Kuzhina",ordNo:"Porosia nr.",orderer:"Porositësi",firm:"Firma",newOrd:"POROSI E RE",newOrds:"POROSI TË REJA",ack:"Shiko",
     noOrders:"Ende asnjë porosi sot.",noneHere:"Asgjë këtu për momentin.",
     cook:"Për t'u gatuar",cookNote:"Numërimi i artikujve që nuk janë dërguar ende.",
     allCooked:"S'ka gjë në pritje.",sendAll:"Të gjitha u dërguan",people:"persona",
@@ -355,7 +355,7 @@ const T = {
   mk:{gate:"Кујна",gateSub:"Лозинка за кујната",enter:"Влези",wrong:"Погрешна лозинка.",
     tabs:{flow:"Порачки",kitchen:"Кујна",runs:"Достави",menu:"Мени",hours:"Работно време",codes:"QR кодови",month:"Месец"},
     today:"Денес",orders:"порачки",revenue:"Промет",all:"Сите",new:"Нови",
-    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",ordNo:"Порачка бр.",orderer:"Нарачува",firm:"Фирма",newOrd:"НОВА ПОРАЧКА",newOrds:"НОВИ ПОРАЧКИ",ack:"Види",
+    prep:"Во подготовка",done:"Испратени",accept:"Прими",deliver:"Испратено",undo:"Врати",del:"Откажи",delSure:"Сигурно?",brand:"Кај абијата",sub:"Народна Кујна",kitchen:"Кујна",ordNo:"Порачка бр.",orderer:"Нарачува",firm:"Фирма",newOrd:"НОВА ПОРАЧКА",newOrds:"НОВИ ПОРАЧКИ",ack:"Види",
     noOrders:"Сè уште нема порачки денес.",noneHere:"Тука нема ништо во моментов.",
     cook:"За готвење",cookNote:"Збир на артикли што сè уште не се испратени.",
     allCooked:"Нема ништо во ред.",sendAll:"Сите се испратени",people:"лица",
@@ -498,8 +498,8 @@ async function poll() {
     }
     first = false;
     document.title = alertQ.length
-      ? `(${alertQ.length}) Te Abija — Kuzhina`
-      : "Te Abija — Kuzhina";
+      ? `(${alertQ.length}) ${t().brand} — ${t().kitchen}`
+      : `${t().brand} — ${t().kitchen}`;
     d = next;
     if (!form) form = { ...next.settings };
     /* Someone is typing: take the data, leave the screen alone. */
@@ -579,7 +579,7 @@ function codesTab() {
     <img src="/api/qr?k=${encodeURIComponent(l.slug)}&prod=1" alt="QR ${esc(l.name)}" loading="lazy">
     <h4>${esc(l.name)}</h4>
     <div class="slug">/?k=${esc(l.slug)}</div>
-    <div class="qnote">${L.scanMe}<br><b>Te Abija</b></div>
+    <div class="qnote">${L.scanMe}<br><b>${L.brand}</b></div>
     ${l.active ? `<div class="tally">${l.orders_today} ${L.orders} · ${L.today}</div>`
                : `<div class="tally" style="color:var(--red)">${L.offNow}</div>`}
     <div class="qa">
@@ -642,7 +642,7 @@ function render() {
     <button class="alarmbtn" data-ack>${L.ack}</button></div>` : "";
 
   h += `<header class="top">
-    <div class="logo">Te Abija<span>Kuzhina Popullore · Народна Кујна</span></div>
+    <div class="logo">${L.brand}<span>${L.sub}</span></div>
     <div class="stat"><b class="num">${c.all}</b><span>${L.today} · ${L.orders}</span></div>
     <div class="stat"><b class="num">${revenue.toLocaleString()}</b><span>${L.revenue} · ${L.den}</span></div>
     ${svcChip()}
@@ -767,7 +767,7 @@ $.addEventListener("click", async e => {
   if (b.hasAttribute("data-ack")) {
     alertQ = [];
     clearInterval(nagTimer); nagTimer = null;
-    document.title = "Te Abija — Kuzhina";
+    document.title = `${t().brand} — ${t().kitchen}`;
     tab = "flow"; filter = "new";
     return render();
   }

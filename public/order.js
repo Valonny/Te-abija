@@ -11,6 +11,7 @@
 
 const T = {
   sq: {
+    brand: "Te Abija",
     sub: "Kuzhina Popullore",
     openNow: "Hapur — mbyllet në",
     closesIn: "edhe",
@@ -86,6 +87,7 @@ const T = {
     days: ["e diel", "e hënë", "e martë", "e mërkurë", "e enjte", "e premte", "e shtunë"],
   },
   mk: {
+    brand: "Кај абијата",
     sub: "Народна Кујна",
     openNow: "Отворено — се затвора во",
     closesIn: "уште",
@@ -381,7 +383,7 @@ function bump(id, by) {
 function header() {
   return `<header class="hdr">
     <div class="hrow">${ICON.pot}
-      <div class="brand">Te Abija<em>${L().sub}</em></div>
+      <div class="brand">${L().brand}<em>${L().sub}</em></div>
       <a class="tel" href="tel:${TEL.dial}" aria-label="${L().callUs} ${TEL.show}">
         ${ICON.phone}<span class="num">${TEL.show}</span></a>
     </div>
